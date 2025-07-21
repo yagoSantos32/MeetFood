@@ -1,0 +1,9 @@
+ :root {
+      --background: #FFDAA6;
+      --input: #FCDCAF;
+      --button: #F39D24;
+      --backgound-secondary: #f9f9f9;
+      --font: "Roboto", sans-serif;
+      --fontColor-highlight: #fff;
+      --fontColor-base:#000
+    }

@@ -1,0 +1,592 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MeetFood - Doações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+  <style>
+    /* ====== GERAL ====== */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffaf3;
+      margin: 0;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      background-color: #ffc107;
+    }
+
+    /* ====== HERO (caso não use carrossel) ====== */
+    .hero {
+  background: url("{% static 'img/food-cover.jpg' %}") no-repeat center center;
+  background-size: cover;
+  height: 500px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 5px #333;
+}
+
+/* ====== HERO CARROSSEL ====== */
+.hero-carousel {
+  position: relative;
+  height: 400px;
+  width: 600px;
+  margin: 100px auto;
+  background-size: cover;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card */
+.donation-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  /* Centralização do conteúdo */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Botões de ação */
+.action-buttons {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-skip,
+.btn-interest {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-skip {
+  background: #f44336;
+  color: white;
+}
+
+.btn-interest {
+  background: #4caf50;
+  color: white;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+  text-align: center;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #aaa;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.chat-button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+    /* ====== SEÇÕES ====== */
+    .section-title {
+      text-align: center;
+      margin: 60px 0 30px;
+    }
+
+    /* ====== SERVIÇOS ====== */
+    .services .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s;
+
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card {
+      min-height: 200px;
+      /* altura igual para todos */
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .services .card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* ====== NÚMEROS ====== */
+    .numbers {
+      background-color: #ffeb99;
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .numbers h3 {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    /* ====== DOAÇÕES ====== */
+
+    .doacoes-grid .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+      transition: transform 0.2s;
+    }
+
+    .doacoes-grid .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .cta-split {
+      background-color: #fffaf3;
+      margin: 40px auto;
+      width: 100%;
+    }
+
+    .cta-split .row {
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .cta-split img {
+      width: 100%;
+      height: auto;
+      max-height: 500px;
+      object-fit: cover;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .cta-text {
+      padding: 40px;
+    }
+
+
+    .cta-text h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      color: #333;
+    }
+
+    .cta-text p {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      .cta-split .row {
+        padding: 0 15px;
+      }
+
+      .cta-split img {
+        max-height: 300px;
+      }
+
+      .cta-text {
+        text-align: center !important;
+        padding: 30px;
+      }
+    }
+
+
+/* Imagem ocupa todo o card */
+.donation-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+/* Conteúdo (texto + botões) sobre a imagem */
+.donation-card > h2,
+.donation-card > p,
+.donation-card > .action-buttons {
+  position: relative;
+  z-index: 2;
+  padding: 40px 20px;
+  margin: 0 20px 10px 20px;
+  border-radius: 8px;
+  color: #000000;
+}
+
+
+
+.btn-skip,
+.btn-interest {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  transition: background 0.3s ease;
+  min-width: 100px;
+}
+
+.btn-skip {
+  background: #f44336;
+}
+
+.btn-skip:hover {
+  background: #d32f2f;
+}
+
+.btn-interest {
+  background: #4caf50;
+}
+
+.btn-interest:hover {
+  background: #388e3c;
+}
+
+
+    /* ====== RODAPÉ ====== */
+    footer {
+      background-color: #fff3cd;
+      padding: 20px;
+      text-align: center;
+    }
+    .user-hover:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}
+  </style>
+</head>
+
+<body>
+
+<div id="inicio"></div>
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <a class="navbar-brand font-weight-bold" href="{% url 'index' %}">MeetFood</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarMain">
+    <ul class="navbar-nav ml-auto">
+      <!-- Links comuns -->
+      <li class="nav-item">
+        <a class="nav-link" href="#">Home</a> <!-- swiper-style -->
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'doacoes' %}">Doações</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Solicitações</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Mensagens</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Avaliações</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Relatórios</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#">Gerenciar Usuários</a>
+      </li> -->
+
+      <!-- Dropdown Olá, Nome -->
+      <li class="nav-item dropdown user-hover">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button">
+Olá,Yago Santos {{ request.user.first_name }}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="#">Ver Perfil</a>
+          <a class="dropdown-item" href="{% url 'logout' %}">Sair</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+
+  <!-- STACK DE CARDS -->
+  <div id="card-stack" class="hero-carousel">
+    {% for p in doacoes %}
+      <div class="donation-card" style="z-index: {{ forloop.revcounter0 }};" data-id="{{ p.id }}">
+        <img src="{{ p.imagem.url }}" alt="{{ p.titulo }}" style="max-width: 100%; border-radius: 12px; margin-bottom: 15px;">
+        <h2>{{ p.restaurante }}</h2>
+        <h3>{{ p.titulo }}</h3>
+        <p>{{ p.descricao }}</p>
+        <div class="action-buttons">
+          <button class="btn-skip" onclick="skipCard(this)">Pular</button>
+          <button class="btn-interest" onclick="interestCard(this)">Interessar</button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  
+
+
+  <!-- Serviços -->
+  <section class="services container">
+    <h2 class="section-title">Como Ajudamos</h2>
+    <div class="row text-center">
+      <div class="col-md-3">
+        <div class="card p-4">
+          <img src="{% static 'icons/food.svg' %}" alt="" width="40" class="mb-3 mx-auto">
+          <h5>Doações</h5>
+          <p>Receba alimentos próximos do vencimento com qualidade garantida.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-4">
+          <img src="{% static 'icons/save.svg' %}" alt="" width="40" class="mb-3 mx-auto">
+          <h5>Economia</h5>
+          <p>Ajude o meio ambiente evitando o desperdício de produtos bons.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-4">
+          <img src="{% static 'icons/community.svg' %}" alt="" width="40" class="mb-3 mx-auto">
+          <h5>Comunidade</h5>
+          <p>Conectamos quem quer doar e quem precisa receber.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-4">
+          <img src="{% static 'icons/sustain.svg' %}" alt="" width="40" class="mb-3 mx-auto">
+          <h5>Sustentável</h5>
+          <p>Promovemos consumo consciente e sustentável.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destaque -->
+  <section class="container my-5">
+    <div class="row align-items-center">
+      <!-- Texto ocupa 7 colunas -->
+      <div class="col-md-7">
+        <h2>Juntos podemos mudar o destino de toneladas de alimentos.</h2>
+        <p>Participe do MeetFood e contribua para um mundo com menos desperdício e mais solidariedade.</p>
+        <p>O desperdício de alimentos é um problema global que afeta milhões de pessoas. Com a sua ajuda, podemos
+          conectar doadores e instituições, promovendo a solidariedade e o cuidado com o meio ambiente.</p>
+        <p>Doe, compartilhe e faça parte desta transformação. Cada gesto conta!</p>
+      </div>
+
+      <!-- Imagem ocupa 5 colunas -->
+      <div class="col-md-5">
+        <img
+          src="https://images.unsplash.com/photo-1546082373-472b0bedd449?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          class="img-fluid rounded" alt="Ajudando pessoas" style="max-height: 500px; object-fit: cover;">
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Números -->
+  <section class="numbers">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h3>+500</h3>
+          <p>Doações realizadas</p>
+        </div>
+        <div class="col-md-4">
+          <h3>+100</h3>
+          <p>Voluntários</p>
+        </div>
+        <div class="col-md-4">
+          <h3>+20</h3>
+          <p>Empresas parceiras</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-split">
+    <div class="row no-gutters align-items-center">
+
+      <!-- Imagem à esquerda (agora com <img>) -->
+      <div class="col-md-6">
+        <img
+          src="https://plus.unsplash.com/premium_photo-1673814604904-b0c0b4ee3316?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Imagem do desperdício de alimentos" class="img-fluid w-100 h-100 object-cover">
+      </div>
+
+      <!-- Texto à direita -->
+      <div class="col-md-6 d-flex align-items-center">
+        <div class="cta-text p-5 w-100 text-center text-md-left">
+          <h2>Juntos podemos mudar o destino de toneladas de alimentos.</h2>
+          <p>Participe do MeetFood e contribua para um mundo com menos desperdício e mais solidariedade.</p>
+          <a href="#inicio" class="btn btn-warning mt-3">Voltar ao Início</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer>
+    <p>© 2025 MeetFood. Todos os direitos reservados.</p>
+  </footer>
+<!-- Modal -->
+<div id="interestModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3>Você está interessado na doação ou no pedido?</h3>
+    <p>Clique abaixo e inicie a conversa.</p>
+<a href="{% url 'chat' %}" class="chat-button">Ir para o Chat</a>
+  </div>
+</div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function removeCard(btn, direction) {
+      const card = btn.closest('.donation-card');
+      const offset = direction === 'left' ? '-150%' : '150%';
+
+      card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+      card.style.transform = `translateX(${offset}) rotate(${direction === 'left' ? '-15' : '15'}deg)`;
+      card.style.opacity = 0;
+
+      setTimeout(() => {
+        card.remove();
+        checkNoCards();
+      }, 500);
+    }
+
+    function skipCard(btn) {
+      removeCard(btn, 'left');
+    }
+
+    function interestCard(btn) {
+      removeCard(btn, 'right');
+    }
+function checkNoCards() {
+  const stack = document.getElementById('card-stack');
+  if (!document.querySelector('.donation-card')) {
+    stack.innerHTML = `
+      <div style="text-align: center; font-weight: bold; padding: 20px;">
+        <p>Indisponível no momento 😞</p>
+        <p>Veja mais opções ou contribua com uma doação:</p>
+        <div style="margin-top: 15px;">
+          <a href="/pagina-de-doacoes.html" style="
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+          ">Ver Doações</a>
+          
+          <a href="/pagina-de-doar.html" style="
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #28A745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+          ">Fazer Doação</a>
+        </div>
+      </div>
+    `;
+  }
+}
+ function interestCard(button) {
+    // Exibe o modal
+    document.getElementById('interestModal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('interestModal').style.display = 'none';
+  }
+
+  // Fecha o modal se clicar fora dele
+  window.onclick = function(event) {
+    const modal = document.getElementById('interestModal');
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+
+</body>
+
+</html>

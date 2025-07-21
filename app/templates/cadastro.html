@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Yago Santos, Lucas Barbosa">
+  <meta name="description" content="A Internet como Recurso de Inclusão no Acesso à Informação">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - MeetFood</title>
+  <link rel="stylesheet" href="../static/styles/theme.css">
+  <link rel="stylesheet" href="../static/styles/login_cadastro.css">
+</head>
+<body>
+
+  <main>
+    <form method="post" class="form_cadastro">
+      {% csrf_token %}
+
+      <header class="form-header">
+        <figure>
+          <img src="../static/assets/logo.png" alt="MeetFood logo">
+          <figcaption>Crie sua conta</figcaption>
+        </figure>
+      </header>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <section class="form-box" >
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" required aria-label="Nome">
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" name="email" autocomplete="email" required aria-label="E-mail">
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha:</label>
+          <input type="password" id="senha" name="senha" autocomplete="new-password" required aria-label="Senha">
+        </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone:</label>
+          <input type="text" id="telefone" name="telefone" aria-label="Telefone">
+        </div>
+
+        <div class="form-group">
+          <label for="tipo_usuario">Tipo de Usuário:</label>
+          <select id="tipo_usuario" name="tipo_usuario" aria-label="Tipo de usuário">
+            <option value="aluno">Restaurante</option>
+            <option value="cliente">Instituição</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cpf_cnpj">CPF ou CNPJ:</label>
+          <input type="text" id="cpf_cnpj" name="cpf_cnpj" aria-label="CPF ou CNPJ">
+        </div>
+      </section>
+
+      <button type="submit" id="enviar">Cadastrar</button>
+
+      <a href="{% url 'login' %}">Já tem conta? Faça login</a>
+    </form>
+  </main>
+
+  <aside>
+    <header class="aside-header">
+      <img src="../static/assets/logo.png" alt="MeetFood logo">
+      <h1>MeetFood</h1>
+    </header>
+    <h2><i>doação consciente: A tecnologia no combate ao desperdício</i></h2>
+  </aside>
+
+</body>
+</html>

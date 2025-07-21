@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Yago Santos, Lucas Barbosa">
+  <meta name="description" content="A Internet como Recurso de Inclusão no Acesso à Informação">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login-MeetFood</title>
+  <link rel="stylesheet" href="../static/styles/theme.css">
+    <link rel="stylesheet" href="../static/styles/login_cadastro.css">
+</head>
+<body>
+
+  <main>
+    <form method="post">
+        {% csrf_token %}
+      <header class="form-header">
+        <figure>
+          <img src="../static/assets/logo.png" alt="BolsaNet logo">
+          <figcaption>Acesse sua conta.</figcaption>
+        </figure>
+      </header>
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <section class="form-box">
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" name="email" autocomplete="email" required aria-label="E-mail">
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha:</label>
+          <input type="password" id="senha" name="senha" autocomplete="current-password" required aria-label="Senha">
+        </div>
+      </section>
+
+      <button type="submit" name="submit" id="enviar">Entrar</button>
+
+      <a  href="{% url 'cadastro' %}">Criar uma conta</a>
+    </form>
+  </main>
+
+  <aside>
+    <header class="aside-header">
+      <img src="../static/assets/logo.png" alt="BolsaNet logo">
+      <h1>MeetFood</h1>
+    </header>
+    <h2><i>doação consciente: A tecnologia no combate ao desperdicio </i></h2>
+  </aside>
+
+</body>
+</html>
