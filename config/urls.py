@@ -17,6 +17,9 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('chat/', chat_view, name='chat'),
     path('doacoes/', doacoes_view, name='doacoes'),
+    path('perfil/', PerfilView.as_view(), name='perfil'),
+    path('perfil/editar/', editar_perfil, name='editar_perfil'),
+
 
 
 

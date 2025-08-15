@@ -1,190 +1,158 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat - DevLopes</title>
+  <title>Chat em Grupo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
-<style>
-  body {
-    background-color: #ccc;    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-  }
+    body {
+      display: flex;
+      height: 100vh;
+      background: #f4f8fb;
+    }
 
-  .chat-header {
-    background-color: rgba(0, 60, 150, 0.9);
-    color: white;
-    padding: 15px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  }
+    .sidebar, .chat {
+      padding: 20px;
+    }
 
-  .chat-header i {
-    margin-right: 10px;
-    cursor: pointer;
-  }
+    .sidebar {
+      width: 20%;
+      background: #fff;
+      border-right: 1px solid #e0e0e0;
+    }
 
-  .chat-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    overflow-y: auto;
-    backdrop-filter: blur(6px);
-  }
+    .chat {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      background: #fff9c4; 
+    }
 
-  .mensagem {
-    max-width: 70%;
-    padding: 12px 16px;
-    border-radius: 16px;
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-    word-break: break-word;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
-  }
+    .user-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-  .msg-enviada {
-    background: rgba(255, 255, 255, 0.2);
-    color: #000000;
-    align-self: flex-end;
-    text-align: right;
-  }
+    .user-info img {
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+    }
 
-  .msg-recebida {
-    background: rgba(255, 255, 255, 0.1);
-    color: #000000;
-    align-self: flex-start;
-    text-align: left;
-  }
+    .status {
+      color: #a67c00; /* amarelo escuro */
+      font-size: 14px;
+      font-weight: 600;
+    }
 
-  .chat-footer {
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-  }
+    .chat-list {
+      margin-top: 20px;
+    }
 
-  .chat-footer .form-control {
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-  }
+    .chat-list div {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
 
-  .chat-footer .form-control::placeholder {
-    color: #ccc;
-  }
+    .chat-list img {
+      border-radius: 50%;
+      width: 40px;
+      margin-right: 10px;
+    }
 
-  .chat-footer .btn {
-    border-radius: 20px;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    font-weight: bold;
-  }
+    .chat-window {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
 
-  .chat-footer .btn:hover {
-    background-color: #0056b3;
-  }
-</style>
+    .message {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      max-width: 60%;
+    }
 
+    .message.you {
+      align-self: flex-end;
+      background: #fff59d; }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background: #fff;
+      border-top: 1px solid #f1c40f; 
+    }
+
+    .input-area input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #f1c40f; 
+      border-radius: 20px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .input-area input:focus {
+      outline: none;
+      border-color: #d4af37;
+      box-shadow: 0 0 5px #d4af37;
+    }
+
+    .input-area button {
+      padding: 10px 20px;
+      border: none;
+      background: #f1c40f; 
+      color: #fff;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .input-area button:hover {
+      background: #d4af37; 
+    }
+  </style>
 </head>
-
 <body>
-<!-- Botão Voltar para Dashboard -->
 
+  <div class="sidebar">
+    <div class="user-info">
+      <img src="https://via.placeholder.com/80" alt="Usuário" />
+      <!-- Nome do usuário logado -->
+<h4>{{ usuario.nome|default:usuario.email }}</h4>
+      <p class="status">Disponível</p>
+    </div>
 
-<!-- Header do chat -->
-<div class="chat-header">
-      <a href="{% url 'dashboard' %}" class="btn btn-link text-success font-weight-bold">
-        &#8592; 
-      </a>
-    <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
-    Chat com João Silva
-  </div>
-
-  <!-- Área de mensagens -->
-  <div class="chat-container" id="chatContainer">
-    <div class="mensagem msg-recebida">Olá, tudo bem?</div>
-    <div class="mensagem msg-enviada">Oi! Tudo certo, e com você?</div>
-  </div>
-
-  <!-- Campo de envio -->
-  <div class="chat-footer">
-    <div class="input-group">
-      <input type="text" id="chatInput" class="form-control" placeholder="Digite sua mensagem..." />
-      <div class="input-group-append">
-        <button id="btnEnviar" class="btn btn-success">Enviar</button>
-      </div>
+    <div class="chat-list">
+      <h4>Conversas</h4>
+      <div><img src="https://via.placeholder.com/40" /> Real estate deals</div>
+      <div><img src="https://via.placeholder.com/40" /> Kate Johnson</div>
+      <div><img src="https://via.placeholder.com/40" /> Tamara Shevchenko</div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script>
-  const chatContainer = document.getElementById('chatContainer');
-  const chatInput = document.getElementById('chatInput');
-  const btnEnviar = document.getElementById('btnEnviar');
-
-  // Função para adicionar mensagem à interface
-  function adicionarMensagem(texto, enviada = true, salvar = true) {
-    const msg = document.createElement('div');
-    msg.className = 'mensagem ' + (enviada ? 'msg-enviada' : 'msg-recebida');
-    msg.innerText = texto;
-    chatContainer.appendChild(msg);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-
-    if (salvar) {
-      salvarMensagem(texto, enviada);
-    }
-  }
-
-  // Função para salvar mensagem no localStorage
-  function salvarMensagem(texto, enviada) {
-    const historico = JSON.parse(localStorage.getItem('chatHistorico')) || [];
-    historico.push({ texto, enviada });
-    localStorage.setItem('chatHistorico', JSON.stringify(historico));
-  }
-
-  // Função para carregar mensagens salvas
-  function carregarMensagens() {
-    const historico = JSON.parse(localStorage.getItem('chatHistorico')) || [];
-    historico.forEach(msg => {
-      adicionarMensagem(msg.texto, msg.enviada, false);
-    });
-  }
-
-  // Botão enviar
-  btnEnviar.addEventListener('click', () => {
-    const texto = chatInput.value.trim();
-    if (!texto) return;
-    adicionarMensagem(texto, true);
-    chatInput.value = '';
-
-    // Resposta automática (exemplo)
-    setTimeout(() => {
-      adicionarMensagem('Mensagem recebida! Vamos analisar.', false);
-    }, 1000);
-  });
-
-  // Tecla Enter
-  chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      btnEnviar.click();
-    }
-  });
-
-  // Carregar mensagens ao abrir
-  carregarMensagens();
-</script>
+  <div class="chat">
+    <div class="chat-window">
+      <div class="message">Oi pessoal, vamos começar a reunião! 😊</div>
+      <div class="message">Recentemente vi imóveis em uma ótima localização!</div>
+      <div class="message you">Ele cria uma atmosfera de mistério </div>
+    </div>
+    <div class="input-area">
+      <input type="text" placeholder="Digite sua mensagem..." />
+      <button>Enviar</button>
+    </div>
+  </div>
 
 </body>
-
 </html>

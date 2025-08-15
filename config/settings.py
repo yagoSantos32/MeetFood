@@ -29,8 +29,6 @@ INSTALLED_APPS = [
 ]
 
 
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',  # Corrigido: "SssionMiddleware"
@@ -64,7 +62,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'meet',  # Atualizado para o novo nome do banco
+        'NAME': 'MeetFood',  # Atualizado para o novo nome do banco
         'USER': 'postgres',
         'PASSWORD': '123456',
         'HOST': 'localhost',

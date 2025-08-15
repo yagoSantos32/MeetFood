@@ -26,15 +26,12 @@ class Usuario(models.Model):  # RF01
 
     def __str__(self):
         return self.nome
+    
 
 
 
-
-# -------------------------------
-# DOAÇÃO
-# -------------------------------
 class Doacao(models.Model):
-    restaurante = models.CharField(max_length=100)
+    restaurante = models.CharField(max_length=100)  # <-- CHARFIELD
     titulo = models.CharField(max_length=100)
     descricao = models.TextField()
     status = models.CharField(max_length=20)
@@ -47,9 +44,6 @@ class Doacao(models.Model):
 
 
 
-# -------------------------------
-# SOLICITAÇÃO
-# -------------------------------
 class Solicitacao(models.Model):
     instituicao = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='solicitacoes',
                                      limit_choices_to={'tipo_usuario': 'instituicao'})
@@ -66,14 +60,12 @@ class Solicitacao(models.Model):
         return f"Solicitação de {self.instituicao.nome} - {self.doacao.titulo}"
 
 
-# -------------------------------
-# MENSAGEM ENTRE USUÁRIOS
-# -------------------------------
 class Mensagem(models.Model):
     remetente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensagens_enviadas')
     destinatario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensagens_recebidas')
     texto = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    doacao = models.ForeignKey(Doacao, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"De {self.remetente.nome} para {self.destinatario.nome}"
@@ -91,3 +83,24 @@ class Avaliacao(models.Model):
 
     def __str__(self):
         return f"Avaliação de {self.avaliador.nome} para {self.avaliado.nome} ({self.nota})"
+class Estoque(models.Model):
+    doacao = models.OneToOneField(Doacao, on_delete=models.CASCADE, related_name='estoque')
+    quantidade_atual = models.PositiveIntegerField()
+    alerta_validade = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Estoque de {self.doacao.titulo} - {self.quantidade_atual}" 
+    def __str__(self):
+        return f"Avaliação de {self.avaliador.nome} para {self.avaliado.nome} ({self.nota})"
+class Relatorio(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='relatorios')
+    data_inicio = models.DateField()
+    data_fim = models.DateField()
+    total_doados = models.PositiveIntegerField(default=0)
+    total_recebidos = models.PositiveIntegerField(default=0)
+    total_desperdicados = models.PositiveIntegerField(default=0)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Relatório {self.usuario.nome} ({self.data_inicio} a {self.data_fim})"
+

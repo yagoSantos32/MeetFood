@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import logout
 from .models import *
+from django import forms
 
 
 # ---------- AUTENTICAÇÃO ----------
@@ -176,8 +177,52 @@ class UsuarioListView(View):
 
 
 def chat_view(request):
-    return render(request, 'chat.html')
+    usuario = None
+    usuario_id = request.session.get('usuario_id')
+    if usuario_id:
+        usuario = get_object_or_404(Usuario, id=usuario_id)
+    return render(request, 'chat.html', {'usuario': usuario})
 
 def doacoes_view(request):
     doacoes = Doacao.objects.filter(disponivel=True)
     return render(request, 'doacoes.html', {'doacoes': doacoes})
+
+class PerfilView(View):
+    def get(self, request):
+        usuario_id = request.session.get('usuario_id')
+        if not usuario_id:
+            return redirect('login') 
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+        except Usuario.DoesNotExist:
+            return redirect('login')
+
+        return render(request, 'perfil.html', {'usuario': usuario})
+    
+class EditarPerfilForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['nome', 'telefone', 'cidade', 'cpf_cnpj']
+            # adicione outros campos que quiser permitir editar
+def editar_perfil(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if request.method == 'POST':
+        form = EditarPerfilForm(request.POST, request.FILES, instance=usuario)
+        if form.is_valid():
+            form.save()
+            return redirect('perfil')
+    else:
+        form = EditarPerfilForm(instance=usuario)
+
+    return render(request, 'editar_perfil.html', {'form': form})
+
+    
+class Meet(models.Model):
+    titulo = models.CharField(max_length=100)
+    descricao = models.TextField()
+    likes = models.ManyToManyField(Usuario, related_name='meus_meets', blank=True)
