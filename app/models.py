@@ -90,8 +90,6 @@ class Estoque(models.Model):
 
     def __str__(self):
         return f"Estoque de {self.doacao.titulo} - {self.quantidade_atual}" 
-    def __str__(self):
-        return f"Avaliação de {self.avaliador.nome} para {self.avaliado.nome} ({self.nota})"
 class Relatorio(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='relatorios')
     data_inicio = models.DateField()
@@ -103,4 +101,5 @@ class Relatorio(models.Model):
 
     def __str__(self):
         return f"Relatório {self.usuario.nome} ({self.data_inicio} a {self.data_fim})"
+
 
